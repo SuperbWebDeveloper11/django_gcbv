@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block content %}
+
+<h2>{{ summary.title }}</h2>
+<br>
+<!-- Display 'Edit' and 'Delete' buttons -->
+{% if user.is_authenticated and summary.created_by == user %}
+<p>
+<a href="{% url 'summary2:summary_update' summary.pk %}" class="btn btn-primary"> Update </a> 
+<a href="{% url 'summary2:summary_delete' summary.pk %}" class="btn btn-danger"> Delete </a>
+</p>
+<hr />
+{% endif %}
+
+
+<!-- Display comment form -->
+{% if user.is_authenticated %}
+<form action="{% url 'summary2:summary_detail' pk=summary.pk %}" method="post" novalidate enctype="multipart/form-data" class="uniForm">
+    {{ comment_form|crispy }}
+    {% csrf_token %}
+    <br>
+    <p><input type="submit" value="Comment" class='btn btn-primary'></p>
+</form>
+{% endif %}
+
+{% for comment in summary.comments.all %}
+  <li>{{comment.content}}</li>
+{% endfor %}
+
+<hr />
+
+{% endblock %}

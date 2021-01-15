@@ -24,6 +24,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'contact.apps.ContactConfig',
     'summary.apps.SummaryConfig',
+    'summary2.apps.Summary2Config',
 ]
 
 MIDDLEWARE = [

@@ -8,6 +8,7 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),
     path('contact/', include('contact.urls', namespace='contact')),
     path('summary/', include('summary.urls', namespace='summary')),
+    path('summary2/', include('summary2.urls', namespace='summary2')),
 ]
 
 # serving media files only during developement
