@@ -12,5 +12,6 @@
 ### summary2:
     1- full example to show how 'SingleObjectMixin' and 'View' works to build SummaryDetail view, (users could create comments on summary_detail.html template)
     2- full example to show how 'SingleObjectMixin' and 'ListView' works to build SummaryDetail2 view, (users could paginate comments for specific summary)
+    3- full example to show how to use two different class based views from the same URL 
 
 

@@ -7,7 +7,7 @@ from django.template.loader import render_to_string
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 # class-based generic views
-from django.views.generic import TemplateView, ListView, DetailView, View
+from django.views.generic import TemplateView, ListView, DetailView, View, FormView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.views.generic.detail import SingleObjectMixin
 # import models
@@ -23,6 +23,7 @@ class SummaryList(ListView):
     paginate_by = 5
 
 
+# ******************** app 1 ******************** 
 class SummaryDetail(SingleObjectMixin, View): 
     model = Summary
 
@@ -47,6 +48,7 @@ class SummaryDetail(SingleObjectMixin, View):
         return render(request, 'summary2/summary/summary_detail.html', context)
 
 
+# ******************** app 2 ******************** 
 class SummaryDetail2(SingleObjectMixin, ListView): 
     paginate_by = 2
     template_name = 'summary2/summary/summary_detail2.html'
@@ -66,6 +68,45 @@ class SummaryDetail2(SingleObjectMixin, ListView):
     def get_queryset(self):
         # return summary comments
         return self.object.comments.all()
+
+
+# ******************** app 3 ******************** 
+class SummaryDisplay(SingleObjectMixin, View): 
+    model = Summary
+
+    # display detail page with summary instance and comment_form
+    def get(self, request, *args, **kwargs):
+        summary = self.get_object()
+        comment_form = CommentForm()
+        context = {'summary': summary, 'comment_form': comment_form}
+        return render(request, 'summary2/summary/summary_detail3.html', context)
+
+class SummaryComment(SingleObjectMixin, FormView):
+    model = Summary
+
+    # save comment form and redisplay detail page with summary instance and comment_form
+    def post(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return HttpResponseForbidden()
+        summary = self.get_object()
+        comment_form = CommentForm(request.POST)
+        if comment_form.is_valid():
+            comment_form.instance.created_by = request.user
+            comment_form.instance.summary = summary
+            comment_form.save()
+        context = {'summary': summary, 'comment_form': comment_form}
+        return render(request, 'summary2/summary/summary_detail3.html', context)
+
+class SummaryDetail3(View):
+    
+    def get(self, request, *args, **kwargs):
+        view = SummaryDisplay.as_view()
+        return view(request, *args, **kwargs)
+    
+    def post(self, request, *args, **kwargs):
+        view = SummaryComment.as_view()
+        return view(request, *args, **kwargs)
+
 
 class SummaryCreate(SuccessMessageMixin, LoginRequiredMixin, CreateView): # create summary 
     model = Summary
