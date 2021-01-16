@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block content %}
+
+<h2>{{ post.title }}</h2>
+<br>
+<!-- Display 'Edit' and 'Delete' buttons -->
+{% if user.is_authenticated and post.created_by == user %}
+<p>
+<a href="{% url 'blog:post_update' post.pk %}" class="btn btn-primary"> Update </a> 
+<a href="{% url 'blog:post_delete' post.pk %}" class="btn btn-danger"> Delete </a>
+</p>
+<hr />
+{% endif %}
+
+
+<!-- Display comment form -->
+{% if user.is_authenticated %}
+<form 
+  {% if update_form %}
+    action="{% url 'blog:post_update_comment' pk=post.pk comment_pk=comment_form.instance.pk %}" 
+  {% else %}
+    action="{% url 'blog:post_detail' pk=post.pk %}" 
+  {% endif %}
+  method="post" 
+  novalidate 
+  enctype="multipart/form-data" 
+  class="uniForm">
+    {{ comment_form|crispy }}
+    {% csrf_token %}
+    <br>
+    <p><input type="submit" value="Comment" class='btn btn-primary'></p>
+</form>
+{% endif %}
+
+{% for comment in post.comments.all %}
+  <li>
+    {{comment.content}}
+    {% if user.is_authenticated and post.created_by == user %}
+    <a href="{% url 'blog:post_update_comment' pk=post.pk comment_pk=comment.pk %}" class="btn btn-primary"> Update </a> 
+    <a href="{% url 'blog:post_delete_comment' pk=post.pk comment_pk=comment.pk %}" class="btn btn-danger"> Delete </a>
+    {% endif %}
+    <br>
+    <br>
+  </li>
+{% endfor %}
+
+<hr />
+
+{% endblock %}

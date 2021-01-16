@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<!-- Display list of all posts -->
+{% for post in post_list %}
+<div class="card bg-light mb-3" style="max-width: 100%;">
+  <div class="card-header">{{ post.title }}</div>
+  <div class="card-body">
+    <a href="{{ post.get_absolute_url }}">Detail</a>
+  </div>
+</div>
+{% empty %}
+<p>No post Yet</p>
+{% endfor %}
+
+
+<!-- Display pagination only if page_obj have some value -->
+{% if page_obj %}
+  {% include "blog/post/pagination.html" with page=page_obj %}
+{% endif %}
+
+
+{% endblock %}

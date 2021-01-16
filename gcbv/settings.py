@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     'contact.apps.ContactConfig',
     'summary.apps.SummaryConfig',
     'summary2.apps.Summary2Config',
+    'blog.apps.BlogConfig',
 ]
 
 MIDDLEWARE = [

@@ -15,3 +15,5 @@
     3- full example to show how to use two different class based views from the same URL 
 
 
+### blog:
+    full example to show how we could make comment crud operations on post detail page without JQuery
