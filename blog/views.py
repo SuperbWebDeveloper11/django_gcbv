@@ -15,7 +15,15 @@ from django.contrib.auth.models import User
 from .models import Post, Comment
 from .forms import CommentForm
 
-
+'''
+    PostList 
+    PostCreate
+    PostUpdate
+    PostDelete
+    PostDetail # <-- display post detail page + create comment
+    PostUpdateComment # <-- display post detail page + update comment
+    PostDetailComment # <-- display delete comment page + redirect to post detail page
+'''
 class PostList(ListView): 
     model = Post
     template_name = 'blog/post/post_list.html'
@@ -82,6 +90,7 @@ class PostDetail(SingleObjectMixin, View):
             comment_form.instance.created_by = request.user
             comment_form.instance.post = post
             comment_form.save()
+            messages.success(request, 'comment created successfuly')
         context = {'post': post, 'comment_form': comment_form}
         return render(request, 'blog/post/post_detail.html', context)
 
@@ -110,10 +119,12 @@ class PostUpdateComment(SingleObjectMixin, View):
             new_content = comment_form.cleaned_data['content']
             current_comment.content = new_content 
             current_comment.save()
+            messages.success(request, 'comment updated successfuly')
         context = {'post': post, 'comment_form': comment_form}
         return render(request, 'blog/post/post_detail.html', context)
 
 
+# <<<<<<<<<<< don't forget to recreate this view using SingleObjectMixin and View >>>>>>>>>>>>>>
 # ************* delete comment ************* 
 class PostDeleteComment(SuccessMessageMixin, LoginRequiredMixin, DeleteView):
     model = Post
